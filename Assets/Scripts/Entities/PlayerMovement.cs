@@ -62,9 +62,11 @@ public class PlayerMovement : EntityMovement
 		}
 	}
 	void Attack (UnityEngine.InputSystem.InputAction.CallbackContext action){
-		Vector2 attackVector = (Vector2)Camera.main.ScreenToWorldPoint(inputScheme.Player.Mouse.ReadValue<Vector2>());
-        attackVector -= (Vector2)transform.position;
-		player.GenerateBaseAttack(attackVector.normalized,attackVector.magnitude);
+		if (inputScheme.Player.Mouse.ReadValue<Vector2>().y >= BottomUI.I.GetUIHeight()){
+			Vector2 attackVector = (Vector2)Camera.main.ScreenToWorldPoint(inputScheme.Player.Mouse.ReadValue<Vector2>());
+			attackVector -= (Vector2)transform.position;
+			player.GenerateBaseAttack(attackVector.normalized,attackVector.magnitude);
+		}
 	}
 	
 }
