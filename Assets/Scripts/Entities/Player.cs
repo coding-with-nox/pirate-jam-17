@@ -7,7 +7,8 @@ public class Player : Entity
     List<Interactable> currentlyInteracting = new();
 	bool interacting; //interacting serve per quando i contenitori sono aperti/altro
 	int interactingWith = -1; // -1 equivale a dire false
-	[SerializeField]Slider healthSlider,manaSlider,staminaSlider;
+	[SerializeField] Slider hpSlider,manaSlider,staminaSlider;
+	Weapon equippedWeapon;
 	public void EnterInteract (Interactable i){
 		currentlyInteracting.Add(i);
 		if (!interacting){
@@ -41,20 +42,29 @@ public class Player : Entity
 			currentlyInteracting[interactingWith].Interact();
 		}
 	}
-	protected override void OnValueChanged(){
-		base.OnValueChanged();
+	protected override void CheckStats (){
+		base.CheckStats();
 		SetSliders();
 	}
 	void SetSliders(){
 		int val, max;
-		val = GetValue(Resource.health, out max);
-		healthSlider.value = (float)val/(float)max;
+		val = GetValue(Entity.Resource.health,out max);
+		hpSlider.value = (float)val/(float)max;
 		
-		val = GetValue(Resource.mana, out max);
-		manaSlider.value = (float)val/(float)max;
-		
-		val = GetValue(Resource.stamina, out max);
+		val = GetValue(Entity.Resource.stamina,out max);
 		staminaSlider.value = (float)val/(float)max;
+		
+		val = GetValue(Entity.Resource.mana,out max);
+		manaSlider.value = (float)val/(float)max;
 	}
-	
+	public override void Setup (EntityStats es){
+		base.Setup(es);
+		faction = Entity.Faction.player;
+	}
+	public override Attack GetBaseAttack(){
+		if (equippedWeapon != null){
+			return equippedWeapon.attack;
+		}
+		return attack;
+	}
 }

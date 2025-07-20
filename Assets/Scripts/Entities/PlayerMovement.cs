@@ -44,14 +44,15 @@ public class PlayerMovement : EntityMovement
         inputScheme.Player.Enable();
 		inputScheme.Player.Interact.performed += InteractTrigger;
 		inputScheme.Player.Sprint.performed += Dash;
+		inputScheme.Player.Attack.performed += Attack;
 	}
 	public void DeRegisterMessages(){
         inputScheme.Player.Disable();
 		inputScheme.Player.Interact.performed -= InteractTrigger;
 		inputScheme.Player.Sprint.performed -= Dash;
+		inputScheme.Player.Attack.performed -= Attack;
 	}
 	void Dash (UnityEngine.InputSystem.InputAction.CallbackContext action){
-		
 		Vector2 input = inputScheme.Player.Move.ReadValue<Vector2>();
 		if (dashCooldownRemaining<= 0 && input != Vector2.zero && player.ChangeValueIfPossible(Entity.Resource.stamina,-dashCost)){
 			dashTimeRemaining = dashTime;
@@ -59,6 +60,11 @@ public class PlayerMovement : EntityMovement
 			AccellerateToMax();
 			MultiplySpeed(dashSpeedMultiplier);
 		}
+	}
+	void Attack (UnityEngine.InputSystem.InputAction.CallbackContext action){
+		Vector2 attackVector = (Vector2)Camera.main.ScreenToWorldPoint(inputScheme.Player.Mouse.ReadValue<Vector2>());
+        attackVector -= (Vector2)transform.position;
+		player.GenerateBaseAttack(attackVector.normalized,attackVector.magnitude);
 	}
 	
 }
