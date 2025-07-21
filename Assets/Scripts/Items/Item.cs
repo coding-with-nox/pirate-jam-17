@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class Item:ScriptableObject
+public abstract class Item:ScriptableObject
 {
-    
+	public string displayedName,description;
+    public bool canStack;
+	public int stackSize;
 }

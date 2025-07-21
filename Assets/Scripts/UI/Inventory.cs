@@ -1,16 +1,48 @@
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Inventory : Singleton<Inventory>
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	[SerializeField]WeaponSlot weapon;
+	[SerializeField]RelicSlot relic;
+    [SerializeField]InventorySlot[] slots;
+	public bool DropItem (InventoryItem i, Vector2 pos){
+		if (weapon.IsInside(pos)){
+			return weapon.MoveItem(i);
+		}
+		if (relic.IsInside(pos)){
+			return relic.MoveItem(i);
+		}
+		foreach (InventorySlot ins in slots){
+			if (ins.IsInside(pos)){
+				return ins.MoveItem(i);
+			}
+		}
+		return false;
+	}
+	/*
+	public bool DropWeapon (Weapon i, Vector2 pos){
+		
+		if (weapon.IsInside(pos)){
+			return weapon.MoveWeapon(i);
+		}
+		foreach (InventorySlot ins in slots){
+			if (ins.IsInside(pos)){
+				return ins.MoveItem(i);
+			}
+		}
+		return false;
+	}
+	public bool DropRelic (Relic i, Vector2 pos){
+		
+		if (relic.IsInside(pos)){
+			return relic.MoveRelic(i);
+		}
+		foreach (InventorySlot ins in slots){
+			if (ins.IsInside(pos)){
+				return ins.MoveItem(i);
+			}
+		}
+		return false;
+	}
+	*/
 }
