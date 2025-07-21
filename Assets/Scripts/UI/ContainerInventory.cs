@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ContainerInventory : Singleton<ContainerInventory>
 {
-	InventorySlot slotA, slotB;
+	[SerializeField]InventorySlot slotA, slotB;
 	bool showing;
     void Start(){
 		// deve essere attivo per fare lo Start e l'Awake, che serve a sua volta per il Singleton

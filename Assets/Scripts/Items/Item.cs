@@ -4,5 +4,5 @@ public abstract class Item:ScriptableObject
 {
 	public string displayedName,description;
     public bool canStack;
-	public int stackSize;
+	public int maxStackSize;
 }

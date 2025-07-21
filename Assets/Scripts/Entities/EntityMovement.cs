@@ -1,13 +1,24 @@
 using UnityEngine;
-
+using System;
+using System.Collections;
+using System.Collections.Generic;
 public abstract class EntityMovement : MonoBehaviour
 {
+	public enum SpeedModifier{
+		interacting,
+		armor,
+		cold,
+		terrain,
+		trap,
+		damage
+	}
 	[SerializeField]float maxSpeed, accelleration;
 	[SerializeField]protected float dashTime, dashCooldown, dashSpeedMultiplier;
 	protected float dashTimeRemaining, dashCooldownRemaining;
 	Rigidbody2D rb;
 	bool setUp;
-    
+    protected Dictionary<SpeedModifier,float>speedMultipliers = new();
+	
     void Start()
     {
         Setup();
@@ -20,6 +31,21 @@ public abstract class EntityMovement : MonoBehaviour
 		
         LimitSpeed();
     }
+	
+	float GetFinalMaxSpeed (){
+		float result = maxSpeed;
+		foreach (KeyValuePair<SpeedModifier,float> kvp in speedMultipliers){
+			maxSpeed *= kvp.Value;
+		}
+		return result;
+	}
+	//DA FINIRE WIP
+	protected void AddSlowdown(){
+		
+	}
+	protected void RemoveSlowdown(){
+		
+	}
 	public virtual void Setup (){
 		if (setUp){
 			return;
@@ -31,8 +57,8 @@ public abstract class EntityMovement : MonoBehaviour
 		setUp = true;
 	}
 	void LimitSpeed(){
-		if (rb.linearVelocity.magnitude >= maxSpeed && dashTimeRemaining <= 0){
-			rb.linearVelocity = rb.linearVelocity.normalized*maxSpeed;
+		if (rb.linearVelocity.magnitude >= GetFinalMaxSpeed () && dashTimeRemaining <= 0){
+			rb.linearVelocity = rb.linearVelocity.normalized*GetFinalMaxSpeed ();
 		}
 	}
 	protected virtual void Move(){
@@ -48,7 +74,7 @@ public abstract class EntityMovement : MonoBehaviour
 		rb.linearVelocity*= val;
 	}
 	protected void AccellerateToMax(){
-		rb.linearVelocity = rb.linearVelocity.normalized*maxSpeed;
+		rb.linearVelocity = rb.linearVelocity.normalized*GetFinalMaxSpeed ();
 	}
 	public float GetSpeedMagnitude(){
 		return rb.linearVelocity.magnitude;

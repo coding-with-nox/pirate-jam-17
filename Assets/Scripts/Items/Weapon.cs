@@ -3,5 +3,5 @@ using UnityEngine;
 public class Weapon : Item
 {
     public Attack attack;
-	public string displayName, description;
+	//public string displayName, description;
 }

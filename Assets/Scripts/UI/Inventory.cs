@@ -5,6 +5,7 @@ public class Inventory : Singleton<Inventory>
 	[SerializeField]WeaponSlot weapon;
 	[SerializeField]RelicSlot relic;
     [SerializeField]InventorySlot[] slots;
+	public GameObject itemTemplate;
 	public bool DropItem (InventoryItem i, Vector2 pos){
 		if (weapon.IsInside(pos)){
 			return weapon.MoveItem(i);

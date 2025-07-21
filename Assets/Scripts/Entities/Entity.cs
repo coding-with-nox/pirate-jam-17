@@ -19,6 +19,7 @@ public abstract class Entity : MonoBehaviour
 	Dictionary<Resource, int> maxValues = new();
 	[SerializeField]EntityStats stats;
 	[SerializeField]protected Attack attack;
+	
 	public Faction faction;
 	float hpRegenTime, manaRegenTime, staminaRegenTime;
 	void Start(){
@@ -50,7 +51,6 @@ public abstract class Entity : MonoBehaviour
 			}
 		}
 	}
-	
 	public void ChangeValue (Resource r, int val){
 		values[r] += val;
 		if (values[r] < 0){
