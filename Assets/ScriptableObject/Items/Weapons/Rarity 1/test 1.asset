@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: beb96b84a6c3bf546acd0c04f9e7432b, type: 3}
-  m_Name: Wood
+  m_Script: {fileID: 11500000, guid: c4b90cdcffc465f4faf540e18b4ae8bc, type: 3}
+  m_Name: test 1
   m_EditorClassIdentifier: 
-  displayedName: Wood
+  displayedName: test1
   description: 
-  canStack: 1
-  maxStackSize: 50
-  type: 1
+  canStack: 0
+  maxStackSize: 0
+  attack: {fileID: 0}

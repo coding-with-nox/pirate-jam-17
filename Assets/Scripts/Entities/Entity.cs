@@ -15,6 +15,11 @@ public abstract class Entity : MonoBehaviour
 		enemy,
 		none //NON USARE su entità, serve per gli attacchi indiscriminati (trappole ed esplosioni)
 	}
+	public enum DeathType{
+		intentional,
+		damage,
+		baseReturn
+	}
 	Dictionary<Resource, int> values = new();
 	Dictionary<Resource, int> maxValues = new();
 	[SerializeField]EntityStats stats;
@@ -74,7 +79,7 @@ public abstract class Entity : MonoBehaviour
 	}
 	protected virtual void CheckStats(){
 		if (values[Resource.health]<= 0){
-			Die();
+			Die(DeathType.damage);
 		}
 	}
 	public virtual void Setup (EntityStats es){
@@ -89,7 +94,7 @@ public abstract class Entity : MonoBehaviour
 		values.Add(Resource.stamina,es.maxStamina);
 		
 	}
-	protected virtual void Die(){
+	public virtual void Die(DeathType dt){
 		
 	}
 	public virtual Attack GetBaseAttack(){

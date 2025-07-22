@@ -15,5 +15,5 @@ MonoBehaviour:
   displayedName: Gems
   description: Shiny!
   canStack: 1
-  maxStackSize: 0
+  maxStackSize: 5
   type: 4

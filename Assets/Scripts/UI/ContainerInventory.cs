@@ -20,6 +20,10 @@ public class ContainerInventory : Singleton<ContainerInventory>
 	void SetActive(bool flag){
 		showing = flag;
 		gameObject.SetActive(flag);
+		if (!showing){
+			slotA.Clear();
+			slotB.Clear();
+		}
 	}
 	public void Setup (Item a, Item b){
 		slotA.SpawnItem(a);

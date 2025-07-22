@@ -9,7 +9,7 @@ public class RoomManager: Singleton<RoomManager>
 	static int currentRoom;
 	
 	public Item [] matList, itemListR1,itemListR2,itemListR3,itemListR4,itemListR5,itemListRB;
-	
+	public GameObject enemyPrefab;
 	public Item GetRandomItem(){
 		if (UnityEngine.Random.Range(0,2) == 1){  //per i random tra 2 integri unity non risponde mai con il massimo, quindi questo intervallo rende solo 0 o 1
 			switch (currentRoom/2){

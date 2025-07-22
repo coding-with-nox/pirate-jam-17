@@ -15,5 +15,5 @@ MonoBehaviour:
   displayedName: Stones
   description: This one's my favourite!
   canStack: 1
-  maxStackSize: 0
+  maxStackSize: 25
   type: 0

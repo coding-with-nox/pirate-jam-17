@@ -8,11 +8,9 @@ public class PlayerMovement : EntityMovement
 	{
 		get
 		{
-#if UNITY_EDITOR
 			if (self == null)
 				if (Application.isPlaying == false)
 					self = (PlayerMovement)FindAnyObjectByType(typeof(PlayerMovement));
-#endif
 			return self;
 		}
 		protected set { self = value; }
@@ -20,7 +18,6 @@ public class PlayerMovement : EntityMovement
 
 	protected virtual void Awake()
 	{
-		// If there is an instance, and it's not me, delete myself.
 		if (I != null && I != this)
 		{
 			Debug.LogWarning($"There is already an instance of type {typeof(PlayerMovement)}");

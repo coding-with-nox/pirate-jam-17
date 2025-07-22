@@ -4,9 +4,36 @@ using System;
 using System.Collections.Generic;
 public class Player : Entity
 {
+	public static Player self;
+	public static Player I
+	{
+		get
+		{
+			if (self == null)
+				if (Application.isPlaying == false)
+					self = (Player)FindAnyObjectByType(typeof(Player));
+			return self;
+		}
+		protected set { self = value; }
+	}
+
+	protected virtual void Awake()
+	{
+		
+		if (I != null && I != this)
+		{
+			Debug.LogWarning($"There is already an instance of type {typeof(Player)}");
+			Destroy(this);
+		}
+		else
+		{
+			I = this as Player;
+		}
+	}
     List<Interactable> currentlyInteracting = new();
 	bool interacting; //interacting serve per quando i contenitori sono aperti/altro
 	int interactingWith = -1; // -1 equivale a dire false
+	public static bool playerAlive = true;
 	[SerializeField] Slider hpSlider,manaSlider,staminaSlider;
 	Weapon equippedWeapon;
 	public void EnterInteract (Interactable i){
@@ -66,5 +93,19 @@ public class Player : Entity
 			return equippedWeapon.attack;
 		}
 		return attack;
+	}
+	public static bool CanShuffleItems(){
+		return playerAlive;
+	}
+	public override void Die(Entity.DeathType dt){
+		if (playerAlive){
+			
+		}
+		else {
+			
+		}
+		
+		playerAlive = !playerAlive;
+		
 	}
 }
