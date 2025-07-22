@@ -4,12 +4,36 @@ using System;
 using System.Collections.Generic;
 public class RoomManager: Singleton<RoomManager>
 {
+	// TEST
 	
-    List<Room>roomList;
-	static int currentRoom;
+	void Start(){
+		EnterNewRoom();
+	}
 	
+	//TEST end
+    List<Room>currentRoomList = new();
+	public static int currentRoom;
+	public TileSet [] tileSetList;
 	public Item [] matList, itemListR1,itemListR2,itemListR3,itemListR4,itemListR5,itemListRB;
-	public GameObject enemyPrefab;
+	public RoomStats[] roomList, bossRoomList;
+	public GameObject roomPrefab,enemyPrefab, chestPrefab, doorPrefab, tilePrefab;
+	public void EnterNewRoom(){
+		currentRoom++;
+		currentRoomList.Add(Instantiate(roomPrefab).GetComponent<Room>().EnterRoom(GetRandomRoomStats(currentRoom == 10),GetRandomTileSet()));
+		
+	}
+	public RoomStats GetRandomRoomStats(bool isBoss){
+		if (isBoss){
+			if (bossRoomList.Length>0){
+				return bossRoomList[UnityEngine.Random.Range(0,bossRoomList.Length)];
+			}
+			return null;
+		}
+		if (roomList.Length>0){
+			return roomList[UnityEngine.Random.Range(0,roomList.Length)];
+		}
+		return null;
+	}
 	public Item GetRandomItem(){
 		if (UnityEngine.Random.Range(0,2) == 1){  //per i random tra 2 integri unity non risponde mai con il massimo, quindi questo intervallo rende solo 0 o 1
 			switch (currentRoom/2){
@@ -89,5 +113,13 @@ public class RoomManager: Singleton<RoomManager>
 			}
 		}
 		return matList[UnityEngine.Random.Range(0,matList.Length)]; 
+	}
+	public TileSet GetRandomTileSet(){
+		if (tileSetList != null && tileSetList.Length >0){
+			return tileSetList[UnityEngine.Random.Range(0,tileSetList.Length)]; 
+		}
+		print ("Missing TileSets");
+		return null;
+		
 	}
 }

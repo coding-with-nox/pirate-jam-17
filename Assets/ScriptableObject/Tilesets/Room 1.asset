@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2be5748ed8f6c1a4ea4a96deca4ecf9e, type: 3}
+  m_Name: Room 1
+  m_EditorClassIdentifier: 
+  tileList:
+  - {fileID: 6024345183057151503, guid: ffb3a7f7a5a6ac2438f396cdcefde7cc, type: 3}
+  - {fileID: 776802002572241332, guid: 59652e0e390410f4fa4437338b1dc21f, type: 3}
+  - {fileID: 3896178137072869733, guid: d39245b14cc1e774a92da162ef1ca325, type: 3}
+  doorList: []
+  chestList: []
+  wallList:
+  - {fileID: -5847551079446653404, guid: 6cd050a63697ed8498133e29440d228f, type: 3}
+  clutterList: []

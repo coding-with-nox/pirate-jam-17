@@ -6,5 +6,5 @@ using System.Collections.Generic;
 public class EnemySpawn
 {
     public EntityStats enemy;
-	public Vector3 spawnPoint;
+	public Vector2 spawnPerc;
 }
