@@ -18,15 +18,21 @@ MonoBehaviour:
   damage:
     type: 0
     val: 100
-  duration: 2
+    slowsFor: 1
+    slowsPerc: 0.5
+  duration: 1
   damageInterval: 0
   projectileSpeed: 0
-  forcedStartingDistance: 0
+  forcedStartingDistance: 0.5
   maxDistance: 0
+  slowsUserFor: 1
+  slowsUserPerc: 0.5
+  coolDown: 1
   maxTargets: 0
   friendlyFire: 0
   projectile: 0
   expanding: 0
   damagesOnEnd: 1
+  followsUser: 1
   attackCost: 5
   attackCostType: 1

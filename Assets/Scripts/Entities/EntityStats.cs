@@ -4,5 +4,6 @@ using UnityEngine;
 public class EntityStats : ScriptableObject
 {
     public int maxHP, maxMana, maxStamina;
-	public float hpRegenTime, manaRegenTime, staminaRegenTime;
+	public float hpRegenTime, manaRegenTime, staminaRegenTime, maxSpeed, accelleration, timeToDie, attackRange;
+	public Attack attack;
 }

@@ -15,6 +15,6 @@ public class DamageValue
 	}
 	public Type type;
 	public int val;
-	
+	public float slowsFor, slowsPerc;
 	
 }

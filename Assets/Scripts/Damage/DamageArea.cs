@@ -27,6 +27,7 @@ public class DamageArea : MonoBehaviour
 		transform.position = new Vector3(pos.x, pos.y,zPos);
 		transform.localScale = a.size;
 		
+		damage = a.damage;
 		
 		initialSize = a.size;
 		expanding = a.expanding;
@@ -43,6 +44,12 @@ public class DamageArea : MonoBehaviour
 	}
 	void Update (){
 		LowerDuration();
+		Move();
+	}
+	void Move(){
+		if (moving){
+			transform.position+=(direction*TimeManager.time*speed);
+		}
 	}
 	//in metodo separato per chiarezza nel caso si debba aggiungere animazioni o trail nell'update
 	void LowerDuration(){
@@ -91,8 +98,11 @@ public class DamageArea : MonoBehaviour
 				collidingWith.Add(e);
 			}
 		}
-		else {
-			// da aggiungere eventuali collisioni con terreno bloccaten tipo muri
+		else if (moving){
+			Tile t = collided.GetComponent<Tile>();
+			if (t!= null && t.isWall){
+				RemoveAttack();
+			}
 		}
     }
 	void OnTriggerExit2D(Collider2D collided){

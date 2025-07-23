@@ -10,9 +10,9 @@ public class Attack : ScriptableObject
 	public Shape shape;
 	public Vector3 size, finalSize;
     public DamageValue damage;
-	public float duration, damageInterval, projectileSpeed, forcedStartingDistance, maxDistance;
+	public float duration, damageInterval, projectileSpeed, forcedStartingDistance, maxDistance, slowsUserFor, slowsUserPerc, coolDown;
 	public int maxTargets;
-	public bool friendlyFire, projectile, expanding, damagesOnEnd;
+	public bool friendlyFire, projectile, expanding, damagesOnEnd, followsUser;
 	public int attackCost;
 	public Entity.Resource attackCostType;
 }

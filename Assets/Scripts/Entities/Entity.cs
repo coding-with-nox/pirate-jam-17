@@ -23,16 +23,30 @@ public abstract class Entity : MonoBehaviour
 	Dictionary<Resource, int> values = new();
 	Dictionary<Resource, int> maxValues = new();
 	[SerializeField]EntityStats stats;
-	[SerializeField]protected Attack attack;
-	
+	protected Attack attack;
+	protected EntityMovement mover;
 	public Faction faction;
-	float hpRegenTime, manaRegenTime, staminaRegenTime;
+	float hpRegenTime, manaRegenTime, staminaRegenTime, cannotAttackFor;
+	protected bool deathAnimation;
+	protected float timeToDie;
 	void Start(){
+		mover = GetComponent<EntityMovement>();
 		Setup(stats);
+		
+		if (mover == null){
+			print (""+this+"Is missing a mover");
+		}
 	}
 	void Update(){
-		RegenResources();
+		if (CanAct()){
+			RegenResources();
+			ExecuteCommands();
+		}
 	}
+	protected virtual void ExecuteCommands(){
+		
+	}
+	
 	void RegenResources(){
 		if (stats.hpRegenTime > 0){
 			hpRegenTime -= TimeManager.time;
@@ -54,6 +68,9 @@ public abstract class Entity : MonoBehaviour
 				ChangeValue(Resource.stamina,1);
 				staminaRegenTime += stats.staminaRegenTime;
 			}
+		}
+		if (cannotAttackFor>0){
+			cannotAttackFor-=TimeManager.time;
 		}
 	}
 	public void ChangeValue (Resource r, int val){
@@ -83,7 +100,6 @@ public abstract class Entity : MonoBehaviour
 		}
 	}
 	public virtual void Setup (EntityStats es){
-		
 		maxValues.Add(Resource.health,es.maxHP);
 		values.Add(Resource.health,es.maxHP);
 		
@@ -93,43 +109,74 @@ public abstract class Entity : MonoBehaviour
 		maxValues.Add(Resource.stamina,es.maxStamina);
 		values.Add(Resource.stamina,es.maxStamina);
 		
+		timeToDie = es.timeToDie;
+		mover.SetSpeedValues(es.maxSpeed, es.accelleration);
+		attack = es.attack;
 	}
 	public virtual void Die(DeathType dt){
-		
+		mover.Stop();
+		deathAnimation = true;
 	}
 	public virtual Attack GetBaseAttack(){
 		return attack;
 	}
 	public void ReceiveDamage (DamageValue dv){
-		print (""+this+": ouchie");
+		if (!deathAnimation){
+			print (""+this+": ouchie");
+			
+			ChangeValue(Resource.health, -dv.val);
+			if (dv.slowsPerc >= 0 && dv.slowsFor >0 && dv.slowsPerc < 1f){
+				mover.AddSpeedModifier(EntityMovement.SpeedModifier.damage,new Vector2(dv.slowsFor , dv.slowsPerc));
+			}
+		}
 	}
 	public void GenerateBaseAttack(Vector3 direction, float distance){
+		//print ("attacking");
 		GenerateSpecialAttack(GetBaseAttack(), direction, distance);
 	}
 	public void GenerateSpecialAttack(Attack a,Vector2 direction, float distance){
-		DamageArea da = null; //instanziato a null per fare da default
-		if (!ChangeValueIfPossible(a.attackCostType,-a.attackCost)){
-			return;
+		//print ("attacking 2");
+		if (CanAttack()){
+			//print ("can attack");
+			DamageArea da = null; //instanziato a null per fare da default
+			if (a.attackCost> 0 && !ChangeValueIfPossible(a.attackCostType,-a.attackCost)){
+				return;
+			}
+			//print ("will attack");
+			if (a.slowsUserPerc >= 0 && a.slowsUserFor >0 && a.slowsUserPerc < 1f){
+				mover.AddSpeedModifier(EntityMovement.SpeedModifier.attacking,new Vector2(a.slowsUserFor, a.slowsUserPerc));
+			}
+			
+			cannotAttackFor = a.coolDown;
+			switch (a.shape){
+				case (Attack.Shape.square):{
+					da = Instantiate(EntityManager.I.squareAttack).GetComponent<DamageArea>();
+					break;
+				}
+				case (Attack.Shape.circle):{
+					da = Instantiate(EntityManager.I.circleAttack).GetComponent<DamageArea>();
+					break;
+				}
+			}
+			if (da != null){
+				float dist = distance;
+				if (a.forcedStartingDistance != 0){
+					dist = a.forcedStartingDistance;
+				}
+				else if(a.maxDistance != 0 && dist > a.maxDistance){
+					dist = a.maxDistance;
+				}
+				da.Setup(a, (Vector2)transform.position+(direction*dist), direction, faction);
+			}
+			if (a.followsUser){
+				da.transform.SetParent(transform);
+			}
 		}
-		switch (a.shape){
-			case (Attack.Shape.square):{
-				da = Instantiate(EntityManager.I.squareAttack).GetComponent<DamageArea>();
-				break;
-			}
-			case (Attack.Shape.circle):{
-				da = Instantiate(EntityManager.I.circleAttack).GetComponent<DamageArea>();
-				break;
-			}
-		}
-		if (da != null){
-			float dist = distance;
-			if (a.forcedStartingDistance != 0){
-				dist = a.forcedStartingDistance;
-			}
-			else if(a.maxDistance != 0 && dist > a.maxDistance){
-				dist = a.maxDistance;
-			}
-			da.Setup(a, (Vector2)transform.position+(direction*dist), direction, faction);
-		}
+	}
+	protected virtual bool CanAttack (){
+		return cannotAttackFor<=0 && CanAct();
+	}
+	public virtual bool CanAct(){
+		return !deathAnimation;
 	}
 }

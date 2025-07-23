@@ -6,7 +6,7 @@ public class Chest : Interactable
 	bool interacted;
 	public int forcedRarity = -2;
 	void SpawnItems(){
-		if (forcedRarity == -2){
+		if (forcedRarity <= -2){
 			itemA = RoomManager.I.GetRandomItem();
 			itemB = RoomManager.I.GetRandomItem();
 		}
@@ -30,5 +30,9 @@ public class Chest : Interactable
 	}
 	public override void Highlight(bool flag){
 		
+	}
+	public void Setup (Sprite sprite, float posX, float posY){
+		GetComponent<SpriteRenderer>().sprite = sprite;
+		transform.localPosition = new Vector3(posX,posY,0.1f);
 	}
 }

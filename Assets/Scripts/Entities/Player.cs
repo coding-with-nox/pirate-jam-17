@@ -30,12 +30,15 @@ public class Player : Entity
 			I = this as Player;
 		}
 	}
+	
+	
     List<Interactable> currentlyInteracting = new();
 	bool interacting; //interacting serve per quando i contenitori sono aperti/altro
 	int interactingWith = -1; // -1 equivale a dire false
 	public static bool playerAlive = true;
 	[SerializeField] Slider hpSlider,manaSlider,staminaSlider;
 	Weapon equippedWeapon;
+	Relic equppedRelic;
 	public void EnterInteract (Interactable i){
 		currentlyInteracting.Add(i);
 		if (!interacting){
@@ -98,6 +101,7 @@ public class Player : Entity
 		return playerAlive;
 	}
 	public override void Die(Entity.DeathType dt){
+		base.Die(dt);
 		if (playerAlive){
 			
 		}

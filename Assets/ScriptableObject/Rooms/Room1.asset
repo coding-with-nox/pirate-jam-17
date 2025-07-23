@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyList: []
   enemyListDead: []
-  chestList: []
+  chestList:
+  - {x: 0.1, y: 0.1}
+  - {x: 0.3, y: 0.4}
+  - {x: 0, y: 0}
   sizeXMax: 30
   sizeYMax: 30
   sizeXMin: 10

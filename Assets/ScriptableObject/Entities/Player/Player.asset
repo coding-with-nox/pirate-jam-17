@@ -18,3 +18,8 @@ MonoBehaviour:
   hpRegenTime: 0
   manaRegenTime: 1
   staminaRegenTime: 0.2
+  maxSpeed: 7
+  accelleration: 1
+  timeToDie: 0
+  attackRange: 0
+  attack: {fileID: 11400000, guid: 5a5abfb55851b9c4d8f7a18ba03fa0d6, type: 2}

@@ -48,6 +48,11 @@ public class Room : MonoBehaviour
 			print ("Error, couldn't spawn enemy");
 		}
 	}
+	void SpawnChests(RoomStats rs){
+		foreach (Vector2 chestPos in rs.chestList){
+			Instantiate(RoomManager.I.chestPrefab,Vector3.zero,Quaternion.identity, transform).GetComponent<Chest>().Setup(GetRandomChestSprite(),(float)sizeX*chestPos.x,(float)sizeY*chestPos.y);
+		}
+	}
 	public void GenerateTiles(RoomStats rs, TileSet ts){
 		sizeX = UnityEngine.Random.Range(rs.sizeXMin,rs.sizeXMax);
 		sizeY = UnityEngine.Random.Range(rs.sizeYMin,rs.sizeYMax);
@@ -59,13 +64,14 @@ public class Room : MonoBehaviour
 		for (int x = 0; x<= sizeX; x++){
 			for (int y = 0; y<= sizeY; y++){
 				if (x == 0 || y == 0 || x == sizeX ||y == sizeY){
-					Instantiate(RoomManager.I.tilePrefab,Vector3.zero,Quaternion.identity, transform).GetComponent<Tile>().Setup(GetRandomWallSprite(),true,(float)x,(float)y);
+					Instantiate(RoomManager.I.tilePrefab,Vector3.zero,Quaternion.identity, transform).GetComponent<Tile>().Setup(GetRandomWallSprite(),(float)x,(float)y);
 				}
 				else {
-					Instantiate(RoomManager.I.tilePrefab,Vector3.zero,Quaternion.identity, transform).GetComponent<Tile>().Setup(GetRandomTileSprite(),false,(float)x,(float)y);
+					Instantiate(RoomManager.I.tilePrefab,Vector3.zero,Quaternion.identity, transform).GetComponent<Tile>().Setup(GetRandomTileSprite(),(float)x,(float)y , y == 1,x == 1  , y == sizeY-1, x == sizeX-1);
 				}
 			}
 		}
+		SpawnChests(rs);
 	}
 	Sprite GetRandomWallSprite(){
 		if (usedTileSet.wallList.Length>0){

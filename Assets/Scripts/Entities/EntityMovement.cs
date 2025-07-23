@@ -10,15 +10,16 @@ public abstract class EntityMovement : MonoBehaviour
 		cold,
 		terrain,
 		trap,
-		damage
+		damage,
+		attacking
 	}
-	[SerializeField]float maxSpeed, accelleration;
+	float maxSpeed, accelleration;
 	[SerializeField]protected float dashTime, dashCooldown, dashSpeedMultiplier;
 	protected float dashTimeRemaining, dashCooldownRemaining;
+	Entity entity;
 	Rigidbody2D rb;
 	bool setUp;
-    protected Dictionary<SpeedModifier,float>speedMultipliers = new();
-	
+    protected Dictionary<SpeedModifier,Vector2>speedMultipliers = new();
     void Start()
     {
         Setup();
@@ -27,28 +28,56 @@ public abstract class EntityMovement : MonoBehaviour
     
     void Update()
     {
+		TickDownSpeedModifiers(TimeManager.time);
 		Move();
 		
         LimitSpeed();
     }
-	
+	public void SetSpeedValues(float newSpeed,float newAcc){
+		maxSpeed = newSpeed;
+		accelleration = newAcc;
+	}
 	float GetFinalMaxSpeed (){
 		float result = maxSpeed;
-		foreach (KeyValuePair<SpeedModifier,float> kvp in speedMultipliers){
-			maxSpeed *= kvp.Value;
+		foreach (KeyValuePair<SpeedModifier,Vector2> kvp in speedMultipliers){
+			//print ("found "+kvp.Key+": "+kvp.Value);
+			result *= kvp.Value.y;
 		}
 		return result;
 	}
-	//DA FINIRE WIP
-	protected void AddSlowdown(){
+	void TickDownSpeedModifiers(float time){
+		Dictionary<SpeedModifier,Vector2> newValue = new();
+		foreach (KeyValuePair<SpeedModifier,Vector2> kvp in speedMultipliers){
+			if (kvp.Value.x-time > 0 || kvp.Value.x == 0){
+				newValue.Add(kvp.Key,new Vector2(kvp.Value.x-time,kvp.Value.y));
+			}
+		}
+		speedMultipliers = newValue;
 		
 	}
-	protected void RemoveSlowdown(){
-		
+	public void AddSpeedModifier(SpeedModifier sm, Vector2 val){
+		if (speedMultipliers.ContainsKey(sm)){
+			speedMultipliers[sm] = val;
+		}
+		else {
+			speedMultipliers.Add(sm,val);
+		}
+	}
+	public void RemoveSpeedModifier(SpeedModifier sm){
+		if (speedMultipliers.ContainsKey(sm)){
+			speedMultipliers.Remove(sm);
+		}
+	}
+	public void ClearSpeedModifiers(){
+		speedMultipliers.Clear();
 	}
 	public virtual void Setup (){
 		if (setUp){
 			return;
+		}
+		entity = GetComponent<Entity>();
+		if (entity == null){
+			print ("Error while getting the entity for "+this);
 		}
 		rb = GetComponent<Rigidbody2D>();
 		if (rb == null){
@@ -64,16 +93,37 @@ public abstract class EntityMovement : MonoBehaviour
 	protected virtual void Move(){
 		
 	}
-	protected void Accellerate(Vector3 v){
+	public void Stop(){
+		rb.linearVelocity = Vector3.zero;
+	}
+	public void SlowDown(){
+		if (!entity.CanAct()){
+			return;
+		}
+		Accellerate(-rb.linearVelocity.normalized);
+	}
+	public void Accellerate(Vector3 v){
+		if (!entity.CanAct()){
+			return;
+		}
 		rb.linearVelocity+= (Vector2)(v*accelleration);
 	}
-	protected void Accellerate(Vector2 v){
+	public void Accellerate(Vector2 v){
+		if (!entity.CanAct()){
+			return;
+		}
 		rb.linearVelocity+= (v*accelleration);
 	}
-	protected void MultiplySpeed(float val){
+	public void MultiplySpeed(float val){
+		if (!entity.CanAct()){
+			return;
+		}
 		rb.linearVelocity*= val;
 	}
-	protected void AccellerateToMax(){
+	public void AccellerateToMax(){
+		if (!entity.CanAct()){
+			return;
+		}
 		rb.linearVelocity = rb.linearVelocity.normalized*GetFinalMaxSpeed ();
 	}
 	public float GetSpeedMagnitude(){
@@ -86,6 +136,9 @@ public abstract class EntityMovement : MonoBehaviour
 		}
     }
 	public void RotateSpeed(Vector2 dir){
+		if (!entity.CanAct()){
+			return;
+		}
 		rb.linearVelocity = dir.normalized*rb.linearVelocity.magnitude;
 	}
 }

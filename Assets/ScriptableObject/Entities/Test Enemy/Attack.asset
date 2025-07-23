@@ -13,20 +13,26 @@ MonoBehaviour:
   m_Name: Attack
   m_EditorClassIdentifier: 
   shape: 0
-  size: {x: 0, y: 0, z: 0}
-  finalSize: {x: 0, y: 0, z: 0}
+  size: {x: 1, y: 1, z: 0}
+  finalSize: {x: 1, y: 1, z: 0}
   damage:
     type: 0
     val: 0
-  duration: 0
+    slowsFor: 0
+    slowsPerc: 0
+  duration: 1
   damageInterval: 0
-  projectileSpeed: 0
-  forcedStartingDistance: 0
+  projectileSpeed: 10
+  forcedStartingDistance: 0.5
   maxDistance: 0
+  slowsUserFor: 1
+  slowsUserPerc: 0.01
+  coolDown: 1
   maxTargets: 0
   friendlyFire: 0
-  projectile: 0
+  projectile: 1
   expanding: 0
   damagesOnEnd: 0
+  followsUser: 1
   attackCost: 0
   attackCostType: 0
