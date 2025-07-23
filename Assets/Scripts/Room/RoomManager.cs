@@ -4,23 +4,27 @@ using System;
 using System.Collections.Generic;
 public class RoomManager: Singleton<RoomManager>
 {
-	// TEST
+	
 	
 	void Start(){
-		EnterNewRoom();
+		SpawnStartingRoom();
 	}
 	
-	//TEST end
+	
     List<Room>currentRoomList = new();
 	public static int currentRoom;
 	public TileSet [] tileSetList;
 	public Item [] matList, itemListR1,itemListR2,itemListR3,itemListR4,itemListR5,itemListRB;
 	public RoomStats[] roomList, bossRoomList;
+	[SerializeField]RoomStats startingRoomStats;
 	public GameObject roomPrefab,enemyPrefab, chestPrefab, doorPrefab, tilePrefab;
 	public void EnterNewRoom(){
 		currentRoom++;
 		currentRoomList.Add(Instantiate(roomPrefab).GetComponent<Room>().EnterRoom(GetRandomRoomStats(currentRoom == 10),GetRandomTileSet()));
 		
+	}
+	void SpawnStartingRoom(){
+		Instantiate(roomPrefab).GetComponent<Room>().EnterRoom(startingRoomStats,tileSetList[0]);
 	}
 	public RoomStats GetRandomRoomStats(bool isBoss){
 		if (isBoss){

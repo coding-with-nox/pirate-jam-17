@@ -53,6 +53,11 @@ public class Room : MonoBehaviour
 			Instantiate(RoomManager.I.chestPrefab,Vector3.zero,Quaternion.identity, transform).GetComponent<Chest>().Setup(GetRandomChestSprite(),(float)sizeX*chestPos.x,(float)sizeY*chestPos.y);
 		}
 	}
+	void SpawnItems (RoomStats rs){
+		foreach (RoomProp rp in rs.itemList){
+			Instantiate(rp.item,Vector3.zero,Quaternion.identity, transform).GetComponent<Chest>().Setup(GetRandomChestSprite(),(float)sizeX*rp.position.x,(float)sizeY*rp.position.y);
+		}
+	}
 	public void GenerateTiles(RoomStats rs, TileSet ts){
 		sizeX = UnityEngine.Random.Range(rs.sizeXMin,rs.sizeXMax);
 		sizeY = UnityEngine.Random.Range(rs.sizeYMin,rs.sizeYMax);
@@ -72,6 +77,7 @@ public class Room : MonoBehaviour
 			}
 		}
 		SpawnChests(rs);
+		SpawnItems(rs);
 	}
 	Sprite GetRandomWallSprite(){
 		if (usedTileSet.wallList.Length>0){
